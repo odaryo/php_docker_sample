@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  # nginx
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - php-fpm
+    volumes:
+      - ./app:/app:cached
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8080:80"
+
+  # php-fpm
+  php-fpm:
+    build:
+      context: ./
+      dockerfile: ./docker/php-fpm/Dockerfile
+    volumes:
+      - ./app:/app:cached
+      - ./docker/php-fpm/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
