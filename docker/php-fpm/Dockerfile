@@ -5,30 +5,23 @@ RUN apk update \
     && apk upgrade \
     && apk add --no-cache \
         bash \
-        git \
-        unzip \
         libpng \
         libpng-dev \
         libjpeg \
-        icu \
-        icu-dev \
-        icu-libs \
         libxml2 \
         libxml2-dev \
-        openssl \
-        openssl-dev \
     && docker-php-ext-install \
         pdo_mysql \
         mysqli \
-        gd \
         mbstring \
         intl \
         xml \
         opcache \
     && docker-php-ext-enable intl mbstring \
-    && apk --update --no-cache add autoconf g++ make \
-    # xdebugインストール
-    && pecl install -f xdebug \
+    && apk --update --no-cache add autoconf g++ make
+    
+# install xdebug
+RUN pecl install -f xdebug \
     && docker-php-ext-enable xdebug \
     && apk del --purge autoconf g++ make
 
