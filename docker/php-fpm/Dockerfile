@@ -1,23 +1,18 @@
 ARG PHP_VERSION
-FROM php:7.3-fpm-alpine
+FROM php:8.0-fpm-alpine
 
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache \
         bash \
-        libpng \
+        libzip-dev \
         libpng-dev \
-        libjpeg \
-        libxml2 \
-        libxml2-dev \
     && docker-php-ext-install \
         pdo_mysql \
-        mysqli \
-        mbstring \
-        intl \
-        xml \
+        bcmath \
+        gd \
         opcache \
-    && docker-php-ext-enable intl mbstring \
+        zip \
     && apk --update --no-cache add autoconf g++ make
     
 # install xdebug
@@ -26,17 +21,21 @@ RUN pecl install -f xdebug \
     && apk del --purge autoconf g++ make
 
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php ;mv composer.phar /usr/local/bin/composer;
-RUN composer global require hirak/prestissimo
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
 
-# create users
-ARG USER_ID=1000
-ARG GROUP_ID=1000
+# create working user
+ARG USER_ID
+ARG GROUP_ID
+ARG USER_NAME=app-user
 
-RUN addgroup -g ${GROUP_ID} -S app-user && \
-    adduser -u ${USER_ID} -S app-user -G app-user
+RUN addgroup -g ${GROUP_ID} ${USER_NAME}
+RUN adduser -S -u ${USER_ID} -G ${USER_NAME} ${USER_NAME}
 
-USER app-user:app-user
+# set ownership of composer to user
+RUN chown ${USER_NAME}:${USER_NAME} /usr/local/bin/composer
+
+USER ${USER_NAME}
 
 # Setup working directory
 WORKDIR /app

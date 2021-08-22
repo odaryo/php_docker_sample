@@ -17,6 +17,9 @@ services:
     build:
       context: ./
       dockerfile: ./docker/php-fpm/Dockerfile
+      args:
+        - USER_ID=${UID:-1000}
+        - GROUP_ID=${GID:-1000}
     volumes:
       - ./app:/app:cached
       - ./docker/php-fpm/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini

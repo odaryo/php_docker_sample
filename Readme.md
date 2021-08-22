@@ -1,13 +1,14 @@
 # PHP-Dockerコンテナ
 
 ## 概要
-PHP開発の基本的なものを含めたコンテナです。
+PHP開発の起動確認用コンテナです。
+実際に開発に使う場合は他にもインストールするモジュールがあるかと思います。
 
 ## 構成
 
 ```
 php_docker_sample/
- ├─  app/  　(Laravelのデータ)
+ ├─  app/    (Laravelのデータ)
  ├─  docker-compose.yml
  └─  docker/   (docker設定ファイル)
       ├─  nginx/
