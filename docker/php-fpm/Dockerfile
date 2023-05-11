@@ -7,6 +7,7 @@ RUN apk update \
         bash \
         libzip-dev \
         libpng-dev \
+        linux-headers \
     && docker-php-ext-install \
         pdo_mysql \
         bcmath \
